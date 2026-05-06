@@ -1,0 +1,165 @@
+# User Problem
+
+*   **OpenProject (MVP phase):** We need LLM infrastructure to build and test AI-powered features with production data. First priority is figuring out what model to use and how many users a single server can handle.
+
+*   **OpenProject (production readiness):** The infrstructure must be production-grade for our SaaS and on-premise deployments, this includes scalability as demand grows.
+
+*   **On-premise administrators:** Need to deploy and maintain AI capabilities within their own infrastructure and compliance boundaries.
+
+*   **Regulated-industry customers:** Operate under strict DSGVO and sector-specific regulation. Any AI that routes data externally is a non-starter.
+
+*   **Organizations with own AI infrastructure:** Have access to their own AI data centers and should be able to bring and run their own models with OpenProject.
+
+
+## Problem
+
+*   Users and organizations want AI features in OpenProject, but they would need to send data to third-party LLM providers. For customers handling sensitive project data, this is unacceptable.
+
+*   Self-hosted LLM are either underperforming and hard to set up (or both). This leads customers to go for external providers which leaves them to either accept the data-sovereignty risk or go without AI.
+
+*   Sending data to third-party LLM hosters frequently violates DSGVO and may conflict with EU AI Act requirements. Customers carry real legal risk.
+
+*   OpenProject has no LLM infrastructure.
+
+    <br>
+
+
+## Pain
+
+*   **Shadow AI:** Users copy-paste project dat into ChatGPT or similar tools, leaking sensitive information without IT oversight.
+
+*   **No easy to setup LLM options available:** On-prem and regulated customers have no path to AI features that respects their data sovereignty.&nbsp;
+
+
+# Business Case
+
+## Reech
+
+Especialy important for customers who chose OpenProject because of data control.
+
+## Impact
+
+AI assistance is a decision driver in 2026 for project management tools. A fully self-hostable, DSGVO/EU AI Act-compliant AI stack is a genuine differentiator that reinforces why customers chose us. Also unblocks every future AI feature.
+
+## Confidence
+
+Key risks:
+
+*   Model and inference stack selection requires empirical testing.
+
+*   On-prem hardware constraints. Customers may lack access to GPUs or the funds for it.
+
+*   EU AI Act compliance still evolving.
+
+*   Real-time latency requirements for interactive use cases.
+
+
+## Urgency and Priority
+
+No AI feature ships without it. Other open source products ship AI the wrong way via third-party providers. We have a window to be the first open-source project management tool that does this right.
+
+## Solution
+
+#### Coree Principle
+
+All AI processing stays within the customer&#39;s controlled environment. No project data is sent to third-party LLM providers.
+
+#### **Phase 1:**  Research &amp; Benchmarking Spike
+
+*   Test candidate open-weight models on our core tasks
+
+    *   text rewriting and translation
+
+    *   real-time assistance
+
+    *   summarization
+
+    *   notification classification and information extraction
+
+    *   AI todo extraction
+
+    *   notification filtering with user rules in natural language
+
+    *   AI buddy transversal, can react to &quot;any&quot; object
+
+*   Model constraints:
+
+    *   open-weight
+
+    *   license-compatible with commercial use
+
+    *   only as large as needed
+
+    *   transparent training data provenance
+
+    *   ethical and environmental footprint considered.
+
+*   Test inference runtimes e.g. vLLM, llama.cpp for streaming, K8s compatibility (and maybe CPU-only viability)
+
+*   Benchmark on reference hardware
+
+*   **Result should be a decision document with benchmarks, selected stack, hardware requirements, license review, ethical/environmental assessment.**
+
+
+#### Phase 2: Infrastructure implementation
+
+*   Model-agnostic inference layer behind an OpenAI-compatible API.
+
+*   Helm charts for GPU, integrated into existing Helmfile setup and separate deployable
+
+*   **API gateway with per-tenant key management, rate limiting, usage logging.**
+
+    *   **Needs to be clarified how keys can be managed**
+
+    *   **We try avoiding a full UI for it except we can use something already build. If so SSO to obtain LLM API keys would be great to have.**
+
+*   **Guardrails middleware e.g. for prompt injection detection including audit log (needs clarification).**
+
+*   Streaming support for real-time use cases.
+
+*   Documentation with deployment guide, hardware specs, compliance checklist.
+
+
+## Out of Scope for the MVC
+
+*   Fine-tunining
+
+*   Multi-model routing
+
+*   RAG and semantic search use cases
+
+
+## Differentiation
+
+*   **Data sovereignty:** The model runs inside our or the customer&#39;s infrastructure. No third-party LLM hoster in the loop.
+
+*   **EU AI Act / DSGVO compliance by design**: Guardrails, audit logging, transparency built in from day one.
+
+*   **Right-sized, not over-sized:** Smallest model that delivers, keeping hardware realistic and energy consumption honest. With transparent energy consumption reporting
+
+
+## Next iteration
+
+*   UI for token, guardrail and account management
+
+*   Multi-model usage
+
+
+# Launch and Growth
+
+## Measures
+
+_How will you know you solved the problem? Please list measurable, quantitative indicators (preferred) or qualitative ways you plan on assessing the solution?_
+
+*   ...
+
+
+## Messaging
+
+_If you were to write a press release, how would you describe the value to customers?_
+
+<figure class="table op-uc-figure_align-center op-uc-figure"><table class="op-uc-table"><tbody><tr class="op-uc-table--row"><th class="op-uc-table--cell op-uc-table--cell_head"><p class="op-uc-p">Headline</p></th><td class="op-uc-table--cell"><p class="op-uc-p">OpenProject enables the secure use of AI features by providing a safe LLM infrastructure for SaaS customers and an easy to install self-hosted solutions for on-prem customers</p></td></tr><tr class="op-uc-table--row"><th class="op-uc-table--cell op-uc-table--cell_head"><p class="op-uc-p">First Paragraph</p></th><td class="op-uc-table--cell"><p class="op-uc-p"><br data-cke-filler="true"></p></td></tr><tr class="op-uc-table--row"><th class="op-uc-table--cell op-uc-table--cell_head"><p class="op-uc-p">Customer Quote</p></th><td class="op-uc-table--cell"><p class="op-uc-p"><br data-cke-filler="true"></p></td></tr></tbody></table></figure>
+
+## Go to market
+
+_How are you planning on getting this into users&#39; hand?_

@@ -8,6 +8,7 @@
     passthrough:
       reasoning:
         enabled: false
+    max_tokens: 16384
 - id: openrouter:qwen/qwen3.6-27b
   config:
     provider:
@@ -17,13 +18,16 @@
     passthrough:
       reasoning:
         enabled: false
+    max_tokens: 16384
 - id: openrouter:google/gemma-4-26b-a4b-it
   config:
     provider:
       order:
         - deepinfra/fp8
+    max_tokens: 16384
 - id: openrouter:google/gemma-4-31b-it
   config:
     provider:
       order:
         - deepinfra/fp8
+    max_tokens: 16384

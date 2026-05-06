@@ -1,4 +1,4 @@
-// Find the last json object in the text output and parse it
+// Find the last json object in the user_text output and parse it
 module.exports = function (output, context) {
     if (typeof output !== 'string') return output;
 

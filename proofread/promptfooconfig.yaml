@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'refine-ticket/sort-into-template'
+
+prompts:
+  - file://prompts/*.yml
+
+providers:
+  - file://../providers.yml
+
+tests:
+  - vars:
+      user_text: "file://vars/user_text/*.txt"
+    assert:
+    - type: finish-reason
+      value: stop # Expects natural completion
+    - type: llm-rubric
+      value: "The output is free of spelling and grammar mistakes."
+      provider: file://../default_judge.yml
+    - type: llm-rubric
+      value: "The HTML tags and attributes in the output were correctly copied from the input if the input contains any: {{user_text}}."
+      provider: file://../default_judge.yml
+    - type: llm-rubric
+      value: "The Markdown formatting, e.g. headings and bullet points, in the output was preserved as in the input if the input contains any: {{user_text}}."
+      provider: file://../default_judge.yml

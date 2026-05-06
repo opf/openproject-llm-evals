@@ -1,5 +1,9 @@
-id: openrouter:google/gemma-4-26b-a4b-it
+#id: openrouter:google/gemma-4-26b-a4b-it
+#config:
+#  provider:
+#    order:
+#      - deepinfra/fp8
+#  max_tokens: 16384
+id: openrouter:anthropic/claude-sonnet-4.6
 config:
-  provider:
-    order:
-      - deepinfra/fp8
+  max_tokens: 16384

@@ -1,0 +1,7 @@
+- role: system
+  content: |
+    Proofread the user text and keep the formatting.
+
+- role: user
+  content: |
+    {{user_text}}
