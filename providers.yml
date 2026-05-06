@@ -1,0 +1,29 @@
+# we define the providers in open router to make sure we know which quantization of the model we are getting
+- id: openrouter:qwen/qwen3.6-35b-a3b
+  config:
+    provider:
+      order:
+        - parasail/fp8
+        - atlas-cloud/fp8
+    passthrough:
+      reasoning:
+        enabled: false
+- id: openrouter:qwen/qwen3.6-27b
+  config:
+    provider:
+      order:
+        - deepinfra/fp8
+        - venice/fp8
+    passthrough:
+      reasoning:
+        enabled: false
+- id: openrouter:google/gemma-4-26b-a4b-it
+  config:
+    provider:
+      order:
+        - deepinfra/fp8
+- id: openrouter:google/gemma-4-31b-it
+  config:
+    provider:
+      order:
+        - deepinfra/fp8

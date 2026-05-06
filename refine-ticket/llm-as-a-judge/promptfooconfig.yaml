@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'refine-ticket/evaluate-llm-as-a-judge'
+
+prompts:
+  - file://prompts/default_grading.yml
+
+providers:
+  - file://../../providers.yml # test all base models also as judges
+  - id: openrouter:google/gemini-3.1-pro-preview # adding a larger model that we might use as a judge
+    config:
+      max_tokens: 16384
+tests: "file://vars/create_tests.py:create_tests"

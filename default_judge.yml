@@ -1,0 +1,5 @@
+id: openrouter:google/gemma-4-26b-a4b-it
+config:
+  provider:
+    order:
+      - deepinfra/fp8

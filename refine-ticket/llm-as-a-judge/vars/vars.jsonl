@@ -1,0 +1,4 @@
+{"name": "just-copied", "sorted_template": "xwiki.json", "original_output": "xwiki-just-copied.json", "rubric": "refine.txt", "schema": "schema-feature.json", "pass": false}
+{"name": "okay", "sorted_template": "xwiki.json", "original_output": "xwiki-rewritten-okay.json", "rubric": "refine.txt", "schema": "schema-feature.json", "pass": true}
+{"name": "added-special-deal", "sorted_template": "xwiki.json", "original_output": "xwiki-rewritten-added-special-deal.json", "rubric": "refine.txt", "schema": "schema-feature.json", "pass": false}
+{"name": "removed-content", "sorted_template": "xwiki.json", "original_output": "xwiki-rewritten-removed-content.json", "rubric": "refine.txt", "schema": "schema-feature.json", "pass": false}

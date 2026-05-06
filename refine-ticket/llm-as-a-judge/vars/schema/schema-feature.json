@@ -1,0 +1,59 @@
+{
+    "type": "object",
+    "properties": {
+        "user_story": {
+            "properties": {
+                "as": {
+                    "type": ["string", "null"],
+                    "description": "role, e.g. admin, project member, user without an account"
+                },
+                "i want to": {
+                    "type": ["string", "null"],
+                    "description": "what the user wants to achieve — describe the goal, not the UI interaction"
+                },
+                "so that": {
+                    "type": ["string", "null"],
+                    "description": "why this matters to the user — the value or outcome they get"
+                }
+            },
+            "required": [],
+            "type": ["object", "null"]
+        },
+        "acceptance_criteria": {
+            "type": ["array", "null"],
+            "description": "List each testable condition as a separate bullet. Each item should be verifiable by QA. Describe observable behavior — what the user sees, clicks, or experiences. Include specific values (page titles, label text, plan names) where known.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "technical_notes": {
+            "type": ["array", "null"],
+            "description": "Implementation details, architectural constraints, component references, API considerations, or links to related code. Also include media and asset notes (e.g., banner variant, video references, screenshot requirements).",
+            "items": {
+                "type": "string"
+            }
+        },
+        "permissions": {
+            "type": ["array", "null"],
+            "description": "Answer both questions: Who can see or access this feature? (role, plan, or permission required). Under what conditions is it hidden or disabled? (e.g., when an enterprise plan is active, when the user lacks a specific permission).",
+            "items": {
+                "type": "string"
+            }
+        },
+        "translation": {
+            "type": ["array", "null"],
+            "description": "List user-facing strings and key terms that need translation. Include the exact English text where known. Flag any terms that should NOT be translated (product names, plan names, brand terms).",
+            "items": {
+                "type": "string"
+            }
+        },
+        "out_of_scope": {
+            "type": ["array", "null"],
+            "description": "What this feature explicitly does NOT cover. Mention adjacent functionality that someone might expect but is not part of this work package. This helps prevent scope creep and sets expectations for QA and stakeholders.",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": []
+}

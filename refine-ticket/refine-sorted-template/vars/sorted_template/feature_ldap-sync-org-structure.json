@@ -1,0 +1,25 @@
+{
+    "user_story": {
+        "as": "admins",
+        "i want to": "see the actual organizational hierarchy reflected in OpenProject (nested OUs or groups in LDAP)",
+        "so that": "their actual organizational hierarchy is not lost"
+    },
+    "acceptance_criteria": [
+        "give them a toggle or a config option: do they want the sync to create standard groups like it does now, or should it map to 'Departments'?",
+        "If a group is a child of another in LDAP, we need to replicate that parent-child relationship here."
+    ],
+    "technical_notes": [
+        "Since LDAP already enforces that a user only belongs to one OU/group, mapping it to our Department model should be pretty clean.",
+        "Let's make sure the 'nested groups' logic is solid before we ship."
+    ],
+    "permissions": [
+        "This is strictly an admin-level configuration—normal users won't see these settings."
+    ],
+    "translation": [
+        "We’ll definitely need to translate the new UI labels for this config since it's going into the admin panel."
+    ],
+    "out_of_scope": [
+        "we are only talking about the sync logic here.",
+        "We aren't changing how permissions work, just how the structure is built during the sync."
+    ]
+}

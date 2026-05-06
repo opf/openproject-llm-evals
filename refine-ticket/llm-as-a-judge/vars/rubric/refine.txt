@@ -1,0 +1,1 @@
+Provides a faithful refinement of the user's content that's better in style and has less errors without adding ungrounded details or removing important ones. User's content: \n{{sorted_template}}\n\nprovided schema:\n{{schema}}

@@ -1,0 +1,19 @@
+{
+    "user_story": {
+        "as": "an administrator",
+        "i want to": "see and manage, remote identities of users.",
+        "so that": "I can, see. What. Remote identities connected and interfere."
+    },
+    "acceptance_criteria": [
+        "Show remote identities in new tab of user settings.",
+        "Show all remote identities by or out.",
+        "Application, be able to delete remote identity.",
+        "It should display the user name. Of the remote identity."
+    ],
+    "technical_notes": [],
+    "permissions": [
+        "only admins see these remote identities."
+    ],
+    "translation": [],
+    "out_of_scope": []
+}

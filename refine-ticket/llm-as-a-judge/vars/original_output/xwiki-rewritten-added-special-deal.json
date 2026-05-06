@@ -1,0 +1,26 @@
+{
+    "user_story": {
+        "as": "admin",
+        "i want to": "see a full page enterprise banner when the instance does not have a valid enterprise plan",
+        "so that": "i am informed about that benefits and how to obtain an enterprise plan"
+    },
+    "acceptance_criteria": [
+        "the dropdown button to create an XWiki provider in the wiki admin pages should have the enterprise icon and is enabled",
+        "when clicking on the icon it should lead the user to the upsell page",
+        "the title of the upsell page is: XWiki integration",
+        "the description of the upsell page is: Connect XWiki to OpenProject and bring your knowledge and documentation into your project workflow. See which pages reference work packages, create new pages, and link everything directly in OpenProject for a seamless flow between documentation and work.",
+        "the enterprise plan show in the upsell page is Enterprise corporate",
+        "The banner should advertise special deals on Tuesdays"
+    ],
+    "technical_notes": [
+        "Video Ideas:\nI think we should take some inspiration from the MCP and OneDrive videos. First, we show the two systems connecting, then we show some interaction, e.g., creating or linking a page from OpenProject.",
+        "Uses the Enterprise Banner variant: Large"
+    ],
+    "permissions": null,
+    "translation": [
+        "XWiki integration",
+        "Connect XWiki to OpenProject and bring your knowledge and documentation into your project workflow. See which pages reference work packages, create new pages, and link everything directly in OpenProject for a seamless flow between documentation and work.",
+        "Enterprise corporate"
+    ],
+    "out_of_scope": null
+}

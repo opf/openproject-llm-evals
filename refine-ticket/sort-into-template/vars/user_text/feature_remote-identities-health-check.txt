@@ -1,0 +1,20 @@
+
+As an administrator, I would like to have an additional check in the health check to check if all remote identities that are linked to users in OpenProject are still have identities in Nextcloud.
+
+Acceptance criteria.
+
+If an when an admin triggers a health check for Nextcloud, all remote identities are checked. If there is remote identities that are not available anymore in Nextcloud, a warning is shown in the health check. In the logs, we output the user IDs for. The once where the check failed, to make it, easier, for the admin to find the users and delete the remote identities, which can be done, um. In an administration user settings, see other feature 73931.
+
+**Permissions and visibility considerations**
+
+- Only admin can see this feature.
+
+
+**Translation considerations**
+
+- Remote identities.
+
+
+**Out of scope**
+
+- Deleting and managing and seeing remote identities through the Open Project Admin UI, see feature 73931

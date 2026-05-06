@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "reason" : {
+      "type": "string"
+    },
+    "pass": {
+      "type": "boolean"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "required": ["reason", "pass", "score"],
+  "additionalProperties": false
+}

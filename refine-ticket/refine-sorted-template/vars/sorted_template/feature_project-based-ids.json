@@ -1,0 +1,26 @@
+{
+    "user_story": {
+        "as": null,
+        "i want to": "keep the legacy database ID links active",
+        "so that": "people [don't] lose their bookmarks"
+    },
+    "acceptance_criteria": [
+        "We need a canonical tag.",
+        "Let's just point everything back to the DB ID URL as the master version."
+    ],
+    "technical_notes": [
+        "URLs are changing. We’re doing the project-based IDs—finally—but we have to keep the legacy database ID links active.",
+        "the team already ruled out redirects because of the overhead.",
+        "I'm thinking we just bake the rel=\"canonical\" right into the header for all work package routes.",
+        "Even if the user is already on the DB ID URL, it doesn't hurt to have the tag there anyway. It keeps the logic simple."
+    ],
+    "permissions": [
+        "No permissions changes"
+    ],
+    "translation": [
+        "no weird translation issues since it’s just a meta tag in the HTML"
+    ],
+    "out_of_scope": [
+        "This is strictly a work package thing—don't touch other page types."
+    ]
+}

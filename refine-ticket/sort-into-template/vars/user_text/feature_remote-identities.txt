@@ -1,0 +1,7 @@
+Subject: **Remote identities in administration user settings.**
+
+As an administrator, I want to see and manage, remote identities of users. So that, I can, see. What. Remote identities connected and interfere.
+
+Acceptance criteria: New line. Show remote identities in new tab of user settings. Show all remote identities by or out. Application, be able to delete remote identity. It should display the user name. Of the remote identity. I'm.
+
+Permissions and visibility considerations only admins see these remote identities.

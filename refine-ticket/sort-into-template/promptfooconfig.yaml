@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'refine-ticket/sort-into-template'
+
+prompts:
+  - file://prompts/*.yml
+
+providers:
+  - file://../../providers.yml
+
+tests:
+  - vars:
+      user_text: "file://vars/user_text/feature_*.txt"
+      schema: file://vars/schema/schema-feature.json
+    assert:
+    - type: contains-json
+      value: file://vars/schema/schema-feature.json
+    - type: llm-rubric
+#      value: file://../llm-as-a-judge/vars/rubric/sort.txt
+      value: "Provides a faithful sorting of the user's content without adding ungrounded details. User's content: \n{{user_text}}\n\nprovided schema:\n{{schema}}"
+      provider: file://../../default_judge.yml
