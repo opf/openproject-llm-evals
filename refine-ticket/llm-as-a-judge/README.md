@@ -5,15 +5,18 @@ for our actual use cases.
 
 It does so by creating scenarios which the judge should properly handle. For example
 * A refinement where the content was just copied without fixing typos
-* A refinement where content was removed
-* A refinement where content was added
+* A refinement/sorting where content was removed
+* A refinement/sorting where content was added
 
 This way we get an idea how good different models and prompts work for judging our use case's results
 and improve them over time.
 
-## The Prompt
+## The Prompts
 The prompt in this case is the default grading prompt of `promptfoo` extracted from its repo.
 
 ## Variables
-We are creating all the test cases using a python script `create_tests` that reads the `vars.jsonl` which
-in turn contains the matching test cases 
+
+* `original_output`: the hypothetical LLM output we want to judge
+* `rubric`: the llm as a judge prompts
+* `schema`: relevant json schemas
+* `sorted_template` the inputs for the refinement task
