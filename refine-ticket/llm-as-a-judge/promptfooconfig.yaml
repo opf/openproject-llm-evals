@@ -9,4 +9,48 @@ providers:
   - id: openrouter:google/gemini-3.1-pro-preview # adding a larger model that we might use as a judge
     config:
       max_tokens: 16384
-tests: "file://vars/create_tests.py:create_tests"
+
+defaultTest:
+  options:
+    transform: "file://transform_output.js"
+  assert:
+    # checks the grading schema was observed
+    - type: "contains-json"
+      value: "file://vars/schema/grading.json"
+    # checks the pass value is the same as the expected one
+    - type: "javascript"
+      value: "file://check_passing.js"
+
+tests:
+  - vars:
+      name: just-copied
+      sorted_template: file://vars/sorted_template/xwiki.json
+      original_output: file://vars/original_output/xwiki-just-copied.json
+      rubric_file_path: vars/rubric/refine.txt
+      rubric: file://fill_rubric.py
+      schema: file://vars/schema/schema-feature.json
+      pass: false
+  - vars:
+      name: okay
+      sorted_template: file://vars/sorted_template/xwiki.json
+      original_output: file://vars/original_output/xwiki-rewritten-okay.json
+      rubric_file_path: vars/rubric/refine.txt
+      rubric: file://fill_rubric.py
+      schema: file://vars/schema/schema-feature.json
+      pass: true
+  - vars:
+      name: added-special-deal
+      sorted_template: file://vars/sorted_template/xwiki.json
+      original_output: file://vars/original_output/xwiki-rewritten-added-special-deal.json
+      rubric_file_path: vars/rubric/refine.txt
+      rubric: file://fill_rubric.py
+      schema: file://vars/schema/schema-feature.json
+      pass: false
+  - vars:
+      name: removed-content
+      sorted_template: file://vars/sorted_template/xwiki.json
+      original_output: file://vars/original_output/xwiki-rewritten-removed-content.json
+      rubric_file_path: vars/rubric/refine.txt
+      rubric: file://fill_rubric.py
+      schema: file://vars/schema/schema-feature.json
+      pass: false
