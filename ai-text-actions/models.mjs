@@ -35,12 +35,12 @@ export default [
   //     max_tokens: 16384,
   //   },
   // },
-  {
-    label: 'gemma4-31b-it',
-    model: 'openrouter:google/gemma-4-31b-it',
-    config: {
-      provider: { order: ['deepinfra/fp8'] },
-      max_tokens: 16384,
-    },
-  },
+  // {
+  //   label: 'gemma4-31b-it',
+  //   model: 'openrouter:google/gemma-4-31b-it',
+  //   config: {
+  //     provider: { order: ['deepinfra/fp8'] },
+  //     max_tokens: 16384,
+  //   },
+  // },
 ];

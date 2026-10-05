@@ -13,13 +13,12 @@ export default {
   })),
 
   defaultTest: {
-    vars: {
-      transformation: 'braindumpify',
-    },
-    assert: [
-      {
-        type: 'llm-rubric',
-        value: 'The output is a reconstruction of the original text below. It was produced by\n' +
+    options: {
+      rubricPrompt:
+        [
+          {
+            "role": "system",
+            "content": 'The output is a reconstruction of the original ticket below. It was produced by\n' +
             'applying the "{{transformation}}" transformation and then reversing it.\n' +
             '\n' +
             'ORIGINAL:\n' +
@@ -27,10 +26,32 @@ export default {
             '\n' +
             'TARGET TEMPLATE: \n' +
             '{{template}}\n' +
-            'Pass only if the reconstruction preserves all meaning, facts, names, numbers,\n' +
+
+            'Check if the reconstruction preserves all meaning, facts, names, numbers,\n' +
             'and intent of the original. Ignore minor differences in wording or punctuation.\n' +
-            'Fail if anything material is lost, added, or distorted.',
+            'Score -1 point for each material deviation.' +
+            'Respond ONLY with JSON, no markdown fences:\n' +
+            '{\n' +
+            '    "reason": "Material differences found: <n>. 1) ... 2) ... (or \'No issues\')",\n' +
+            '    "issue_count": <integer>,\n' +
+            '    "score": <1 / (1 + issue_count)>,\n' +
+            '    "pass": <true only if issue_count == 0>\n' +
+            '}\n',
+          },
+          {
+            "role": "user",
+            "content": "{{output}}"
+          }
+        ]
+    },
+    vars: {
+      transformation: 'braindumpify',
+    },
+    assert: [
+      {
+        type: 'llm-rubric',
         provider: 'file://../../default_judge.yml',
+        metric: "faithfulness",
       },
     ],
   },
