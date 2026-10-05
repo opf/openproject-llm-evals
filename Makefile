@@ -12,3 +12,9 @@ eval-refine-ticket:
 
 eval-refine-ticket-llm-as-a-judge:
 	cd refine-ticket/llm-as-a-judge && promptfoo eval
+
+eval-ai-text-action-structure:
+	cd ai-text-actions/structure && promptfoo eval
+
+eval-ai-text-action-translate-german:
+	cd ai-text-actions/translate_german && promptfoo eval

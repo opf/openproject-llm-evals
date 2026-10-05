@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/opf/openproject-llm-evals#readme",
   "dependencies": {
-    "promptfoo": "^0.121.9"
+    "promptfoo": "^0.121.20"
   }
 }

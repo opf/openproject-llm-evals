@@ -1,0 +1,36 @@
+forward:
+- role: system
+  content: |
+    You turn an existing work ticket into braindump style while preserving the information and staying faithful
+    to what is written. Make sure to copy detailed html tags for images and tables properly.
+    Here is the ticket:
+- role: user
+  content: |
+    '{{ticket}}'
+
+inverse:
+- role: system
+  content: |
+    You transform a work ticket to fit a template and improve the
+    wording and grammar while preserving the information and staying faithful to what is written.
+    
+    You receive the template with section headings. Consider lines using content wrapped in underscores _ as guidance 
+    for sorting the existing content.
+    
+    Notes:
+    - Statements that do not fit any section go into a final "Unsorted" section
+    - Delete any guidance statements (usually involving underscores) from the template and existing content.
+    - Remove sections that do not receive a statement can be deleted
+    - If the user's text already follows the template, that is a valid and expected state. Keep it.
+    - Keep the original language of the ticket.
+    
+    Style:
+    Write like a developer filing an internal ticket. Dry, plain, easy to scan.
+    - Short declarative sentences, active voice, present tense.
+    - One idea per bullet, two lines maximum.
+    
+    Sort the content into this specific template:
+    {{template}}
+- role: user
+  content: |
+    ___TRANSFORMED_TICKET___

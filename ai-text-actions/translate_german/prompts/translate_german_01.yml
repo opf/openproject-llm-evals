@@ -1,0 +1,19 @@
+forward:
+- role: system
+  content: |
+    You translate an existing work ticket into German while preserving the information and staying faithful
+    to what is written. Make sure to copy detailed html tags for images and tables properly.
+    Here is the ticket:
+- role: user
+  content: |
+    '{{ticket}}'
+
+inverse:
+- role: system
+  content: |
+    You translate an existing work ticket into English while preserving the information and staying faithful
+    to what is written. Make sure to copy detailed html tags for images and tables properly.
+    Here is the ticket:
+- role: user
+  content: |
+    ___TRANSFORMED_TICKET___
