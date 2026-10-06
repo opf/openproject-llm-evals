@@ -29,7 +29,6 @@ export default {
 
             'Check if the reconstruction preserves all meaning, facts, names, numbers,\n' +
             'and intent of the original. Ignore minor differences in wording or punctuation.\n' +
-            'Score -1 point for each material deviation.' +
             'Respond ONLY with JSON, no markdown fences:\n' +
             '{\n' +
             '    "reason": "Material differences found: <n>. 1) ... 2) ... (or \'No issues\')",\n' +
