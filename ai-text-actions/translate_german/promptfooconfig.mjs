@@ -24,10 +24,10 @@ export default {
             'ORIGINAL:\n' +
             '{{ticket}}\n' +
             'Check if the reconstruction preserves all meaning, facts, names, numbers,\n' +
-            'and intent of the original. Ignore minor differences in wording or punctuation.\n' +
+            'and intent of the original. Ignore minor differences in wording and punctuation.\n' +
             'Respond ONLY with JSON, no markdown fences:\n' +
             '{\n' +
-            '    "reason": "Material differences found: <n>. 1) ... 2) ... (or \'No issues\')",\n' +
+            '    "reason": "Material differences found: 1) ... 2) ... (or \'None\')",\n' +
             '    "issue_count": <integer>,\n' +
             '    "score": <1 / (1 + issue_count)>,\n' +
             '    "pass": <true only if issue_count == 0>\n' +

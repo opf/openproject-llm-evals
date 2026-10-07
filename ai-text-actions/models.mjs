@@ -18,15 +18,15 @@ export default [
       max_tokens: 16384,
     },
   },
-  // {
-  //   label: 'claude-sonnet-5.5',
-  //   model: 'openrouter:anthropic/claude-sonnet-5.5',
-  //   config: {
-  //     showThinking: false,
-  //     passthrough: { reasoning: { effort: "minimal" } },
-  //     max_tokens: 16384,
-  //   },
-  // },
+  {
+    label: 'claude-sonnet-5.5',
+    model: 'openrouter:anthropic/claude-sonnet-5.5',
+    config: {
+      showThinking: false,
+      passthrough: { reasoning: { effort: "minimal" } },
+      max_tokens: 16384,
+    },
+  },
   {
     label: 'gemma-4-26b-a4b-it',
     model: 'openrouter:google/gemma-4-26b-a4b-it',
@@ -40,7 +40,46 @@ export default [
     model: 'openrouter:google/gemma-4-31b-it',
     config: {
       provider: { order: ['deepinfra/fp8'] },
+      passthrough: { reasoning: { enabled: false } },
       max_tokens: 16384,
     },
   },
+  {
+    label: 'muse-glimmer-30b',
+    model: 'openrouter:meta/muse-glimmer-30b',
+    config: {
+      showThinking: false,
+      provider: { order: ['phala'] },
+      passthrough: { reasoning: { enabled: true, strength: "low" } },
+      max_tokens: 16384,
+    },
+  },
+  {
+    label: 'nemotron-3.5-lightning',
+    model: 'openrouter:nvidia/nemotron-3.5-lightning',
+    config: {
+      provider: { order: ['deepinfra/bf16'] },
+      passthrough: { reasoning: { enabled: false } },
+      max_tokens: 16384,
+    },
+  },
+  {
+    label: 'glm-4.7-flash',
+    model: 'openrouter:z-ai/glm-4.7-flash',
+    config: {
+      provider: { order: ['venice/fp8'] },
+      passthrough: { reasoning: { enabled: false } },
+      max_tokens: 16384,
+    },
+  },
+  {
+    label: 'Kolibri-1',
+    model: 'openai:chat:Aleph-Alpha/Kolibri-1',
+    config: {
+      showThinking: false,
+      apiBaseUrl: "http://localhost:8000/v1",
+      passthrough: { reasoning: { enabled: true, strength: "low" } },
+      max_tokens: 16384
+    }
+  }
 ];

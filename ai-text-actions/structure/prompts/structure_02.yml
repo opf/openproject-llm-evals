@@ -23,6 +23,7 @@ inverse:
     - Remove sections that do not receive a statement can be deleted
     - If the user's text already follows the template, that is a valid and expected state. Keep it.
     - Keep the original language of the ticket.
+    - Make sure to copy detailed html tags for images and tables properly.
     
     Style:
     Write like a developer filing an internal ticket. Dry, plain, easy to scan.
