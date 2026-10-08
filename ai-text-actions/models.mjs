@@ -5,7 +5,10 @@ export default [
     model: 'openrouter:qwen/qwen3.6-35b-a3b',
     config: {
       provider: { order: ['parasail/fp8', 'atlas-cloud/fp8'] },
-      passthrough: { reasoning: { enabled: false } },
+      passthrough: {
+        reasoning: {enabled: false},
+        temperature: 0.0
+      },
       max_tokens: 16384,
     },
   },
@@ -14,7 +17,7 @@ export default [
     model: 'openrouter:qwen/qwen3.8-27b',
     config: {
       provider: { order: ['deepinfra/fp8', 'venice/fp8'] },
-      passthrough: { reasoning: { enabled: false } },
+      passthrough: { reasoning: { enabled: false }, temperature: 0 },
       max_tokens: 16384,
     },
   },
@@ -23,7 +26,7 @@ export default [
     model: 'openrouter:anthropic/claude-sonnet-5.5',
     config: {
       showThinking: false,
-      passthrough: { reasoning: { effort: "minimal" } },
+      passthrough: { reasoning: { effort: "minimal" }, temperature: 0 },
       max_tokens: 16384,
     },
   },
@@ -31,6 +34,7 @@ export default [
     label: 'gemma-4-26b-a4b-it',
     model: 'openrouter:google/gemma-4-26b-a4b-it',
     config: {
+      passthrough: { reasoning: { enabled: false }, temperature: 0 },
       provider: { order: ['deepinfra/fp8'] },
       max_tokens: 16384,
     },
@@ -40,7 +44,7 @@ export default [
     model: 'openrouter:google/gemma-4-31b-it',
     config: {
       provider: { order: ['deepinfra/fp8'] },
-      passthrough: { reasoning: { enabled: false } },
+      passthrough: { reasoning: { enabled: false }, temperature: 0 },
       max_tokens: 16384,
     },
   },
@@ -50,7 +54,7 @@ export default [
     config: {
       showThinking: false,
       provider: { order: ['phala'] },
-      passthrough: { reasoning: { enabled: true, strength: "low" } },
+      passthrough: { reasoning: { enabled: true, strength: "low" }, temperature: 0  },
       max_tokens: 16384,
     },
   },
@@ -59,7 +63,7 @@ export default [
     model: 'openrouter:nvidia/nemotron-3.5-lightning',
     config: {
       provider: { order: ['deepinfra/bf16'] },
-      passthrough: { reasoning: { enabled: false } },
+      passthrough: { reasoning: { enabled: false }, temperature: 0  },
       max_tokens: 16384,
     },
   },
@@ -68,7 +72,7 @@ export default [
     model: 'openrouter:z-ai/glm-4.7-flash',
     config: {
       provider: { order: ['venice/fp8'] },
-      passthrough: { reasoning: { enabled: false } },
+      passthrough: { reasoning: { enabled: false }, temperature: 0  },
       max_tokens: 16384,
     },
   },
@@ -78,7 +82,7 @@ export default [
     config: {
       showThinking: false,
       apiBaseUrl: "http://localhost:8000/v1",
-      passthrough: { reasoning: { enabled: true, strength: "low" } },
+      passthrough: { reasoning: { enabled: true, strength: "low" }, temperature: 0  },
       max_tokens: 16384
     }
   }

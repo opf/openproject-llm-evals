@@ -1,4 +1,5 @@
-import { loadApiProvider } from 'promptfoo';
+import { createHash } from 'node:crypto';
+import promptfoo, { loadApiProvider } from 'promptfoo';
 
 const addUsage = (a = {}, b = {}) => ({
   total: (a.total || 0) + (b.total || 0),
@@ -31,6 +32,20 @@ export default class RoundTripProvider {
     }
 
     const { model: modelId, ...modelConfig } = this.config;
+        // Cache key covers everything that affects the result: model, its config, and the rendered prompt
+    const cacheKey =
+      'roundtrip:' +
+      createHash('sha256').update(JSON.stringify({ modelId, modelConfig, spec })).digest('hex');
+
+    const cache = promptfoo.cache.isCacheEnabled() ? await promptfoo.cache.getCache() : null;
+    if (cache) {
+      const hit = await cache.get(cacheKey);
+      if (hit) {
+        return { ...hit, cached: true, tokenUsage: { cached: hit.tokenUsage?.total || 0 } };
+      }
+    }
+
+
     const model = await loadApiProvider(modelId, { options: { config: modelConfig } });
 
     // Step 1: forward messages (original already rendered in by promptfoo)
@@ -46,12 +61,16 @@ export default class RoundTripProvider {
     const inverse = await model.callApi(JSON.stringify(inverseMessages));
     if (inverse.error) return { error: `Inverse step failed: ${inverse.error}` };
 
-    return {
+    const result = {
       output: inverse.output,
       tokenUsage: addUsage(forward.tokenUsage, inverse.tokenUsage),
       metadata: { originalTicket: context?.vars?.ticket,
                   transformedTicket: forward.output,
                   reconstructedTicket: inverse.output},
     };
+
+    // Only successful round trips are cached; errors return early above and are retried next run
+    if (cache) await cache.set(cacheKey, result);
+    return result;
   }
 }
