@@ -55,4 +55,3 @@ ActiveSupport.on_load(:good_job_process) do
   end)
 end
 ```
-=

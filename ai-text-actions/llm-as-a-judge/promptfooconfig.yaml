@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'ai-text-actions/evaluate-llm-as-a-judge'
+
+prompts:
+  - file://../_shared_vars/rubrics/structure-grading.yaml
+  - file://../_shared_vars/rubrics/translation-grading.yaml
+
+providers:
+  - file://../../default_judge.yml
+
+defaultTest:
+  options:
+    transform: "file://../../util/parse_json_output.js"
+  assert:
+    # checks the number of issues found and the score is the same as the expected one
+    - type: "javascript"
+      value: "file://check_num_issues.js"
+
+tests:
+  - vars:
+      name: just-copied-01
+      ticket: file://../_shared_vars/tickets/bug_v1_AGILE-254.md
+      output: file://../_shared_vars/tickets/bug_v1_AGILE-254.md
+      template: file://../_shared_vars/templates/bug_v1.md
+      expected_issue_count: 0
+      expected_score: 1.0
+  - vars:
+      name: just-copied-02
+      ticket: file://../_shared_vars/tickets/bug_v1_COMMS-608.md
+      output: file://../_shared_vars/tickets/bug_v1_COMMS-608.md
+      template: file://../_shared_vars/templates/bug_v1.md
+      expected_issue_count: 0
+      expected_score: 1.0
+  - vars:
+      name: just-copied-03
+      ticket: file://../_shared_vars/tickets/feat_v1_COMMS-750.md
+      output: file://../_shared_vars/tickets/feat_v1_COMMS-750.md
+      template: file://../_shared_vars/templates/feat_v1.md
+      expected_issue_count: 0
+      expected_score: 1.0
+  - vars:
+      name: added-browser
+      ticket: file://../_shared_vars/tickets/bug_v1_DREAM-130.md
+      output: file://vars/outputs/bug_v1_DREAM-130_added-browser.md
+      template: file://../_shared_vars/templates/bug_v1.md
+      expected_issue_count: 1
+      expected_score: 0.5
+  - vars:
+      name: changed-version
+      ticket: file://../_shared_vars/tickets/bug_v1_DREAM-130.md
+      output: file://vars/outputs/bug_v1_DREAM-130_added-browser.md
+      template: file://../_shared_vars/templates/bug_v1.md
+      expected_issue_count: 1
+      expected_score: 0.5
+  - vars:
+      name: broken-links
+      ticket: file://../_shared_vars/tickets/bug_v1_OP-13352.md
+      output: file://vars/outputs/bug_v1_OP-13352-broken-links.md
+      template: file://../_shared_vars/templates/bug_v1.md
+      expected_issue_count: 1
+      expected_score: 0.5
+  - vars:
+      name: table-content-changes
+      ticket: file://../_shared_vars/tickets/feat_v1_OP-17519.md
+      output: file://vars/outputs/feat_v1_OP-17519-table-content-changes.md
+      template: file://../_shared_vars/templates/feat_v1.md
+      expected_issue_count: 1
+      expected_score: 0.5
+  - vars:
+      name: multi-issues
+      ticket: file://../_shared_vars/tickets/feat_v1_SSI-461.md
+      output: file://vars/outputs/feat_v1_SSI-461-multi-issue.md
+      template: file://../_shared_vars/templates/feat_v1.md
+      expected_issue_count: 3
+      expected_score: 0.25

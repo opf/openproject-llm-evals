@@ -14,35 +14,7 @@ export default {
 
   defaultTest: {
     options: {
-      rubricPrompt:
-        [
-          {
-            "role": "system",
-            "content": 'The output is a reconstruction of the original ticket below. It was produced by\n' +
-            'applying the "{{transformation}}" transformation and then reversing it.\n' +
-            '\n' +
-            'ORIGINAL:\n' +
-            '{{ticket}}\n' +
-            '\n' +
-            'TARGET TEMPLATE: \n' +
-            '{{template}}\n' +
-
-            'Check if the reconstruction preserves all meaning, facts, names, numbers,\n' +
-            'and intent of the original. Ignore minor differences in wording, punctuation or structure if the meaning and intent stay the same.\n' +
-            'An added "unsorted" section is okay if the items within are faithful to the original.\n' +
-            'Respond ONLY with JSON, no markdown fences:\n' +
-            '{\n' +
-            '    "reason": "Material differences found: 1) ... 2) ... (or \'None\')",\n' +
-            '    "issue_count": <integer>,\n' +
-            '    "score": <1 / (1 + issue_count)>,\n' +
-            '    "pass": <true only if issue_count == 0>\n' +
-            '}\n',
-          },
-          {
-            "role": "user",
-            "content": "{{output}}"
-          }
-        ]
+      rubricPrompt: 'file://../_shared_vars/rubrics/structure-grading.yaml'
     },
     vars: {
       transformation: 'braindumpify',

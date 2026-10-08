@@ -7,3 +7,4 @@
 id: openrouter:anthropic/claude-sonnet-5.5
 config:
   max_tokens: 16384
+  temperature: 0
