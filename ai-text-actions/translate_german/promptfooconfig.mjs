@@ -18,6 +18,7 @@ export default {
     },
     vars: {
       transformation: 'translate to german',
+      forwardModel: 'file://../../default_judge.yml'
     },
     assert: [
       {

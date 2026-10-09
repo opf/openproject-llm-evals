@@ -18,6 +18,7 @@ export default {
     },
     vars: {
       transformation: 'braindumpify',
+      forwardModel: 'file://../../default_judge.yml'
     },
     assert: [
       {
