@@ -1,6 +1,13 @@
 import { createHash } from 'node:crypto';
 import promptfoo, { loadApiProvider } from 'promptfoo';
 
+const parseBool = (val, defaultValue = false) => {
+  if (val === undefined) return defaultValue;
+  return /^(true|1)$/i.test(val.trim());
+};
+
+const cache_enabled = parseBool(process.env.PROMPTFOO_CACHE_ENABLED, true)
+
 const addUsage = (a = {}, b = {}) => ({
   total: (a.total || 0) + (b.total || 0),
   prompt: (a.prompt || 0) + (b.prompt || 0),
@@ -21,6 +28,7 @@ export default class RoundTripProvider {
   }
 
   async callApi(prompt, context) {
+
     let spec;
     try {
       spec = JSON.parse(prompt);
@@ -37,7 +45,7 @@ export default class RoundTripProvider {
       'roundtrip:' +
       createHash('sha256').update(JSON.stringify({ modelId, modelConfig, spec })).digest('hex');
 
-    const cache = promptfoo.cache.isCacheEnabled() ? await promptfoo.cache.getCache() : null;
+    const cache = cache_enabled ? context.getCache() : null;
     if (cache) {
       const hit = await cache.get(cacheKey);
       if (hit) {

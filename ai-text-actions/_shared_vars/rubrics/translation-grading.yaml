@@ -4,7 +4,8 @@
     applying the "{{transformation}}" transformation and then reversing it.
 
     ORIGINAL:
-    {{ticket}}
+    {{ticket | indent(4)}}
+    
     Check if the reconstruction preserves all meaning, facts, names, numbers,
     and intent of the original. Ignore minor differences in wording and punctuation.
     Respond ONLY with JSON, no markdown fences:
@@ -15,4 +16,5 @@
         "pass": <true only if issue_count == 0>
     }
 - role: user
-  content: "{{output}}"
+  content: |
+    {{output | indent(4)}}

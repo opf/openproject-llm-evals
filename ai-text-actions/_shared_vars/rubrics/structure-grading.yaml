@@ -4,10 +4,10 @@
     applying the "{{transformation}}" transformation and then reversing it.
 
     ORIGINAL:
-    {{ticket}}
+    {{ticket | indent(4)}}
 
     TARGET TEMPLATE:
-    {{template}}
+    {{template | indent(4)}}
     Check if the reconstruction preserves all meaning, facts, names, numbers,
     and intent of the original. Ignore minor differences in wording, punctuation or structure if the meaning and intent stay the same.
     An added "unsorted" section is okay if the items within are faithful to the original.
@@ -19,4 +19,5 @@
         "pass": <true only if issue_count == 0>
     }
 - role: user
-  content: "{{output}}"
+  content: |
+    {{output | indent(4)}}

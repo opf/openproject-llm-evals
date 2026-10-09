@@ -67,9 +67,30 @@ tests:
       expected_issue_count: 1
       expected_score: 0.5
   - vars:
-      name: multi-issues
+      name: table-to-markdown
+      ticket: file://../_shared_vars/tickets/feat_v1_OP-17519.md
+      output: file://vars/outputs/feat_v1_OP-17519-table-to-markdown.md
+      template: file://../_shared_vars/templates/feat_v1.md
+      expected_issue_count: 0
+      expected_score: 1.0
+  - vars:
+      name: SSI-461-multi-issues
       ticket: file://../_shared_vars/tickets/feat_v1_SSI-461.md
       output: file://vars/outputs/feat_v1_SSI-461-multi-issue.md
       template: file://../_shared_vars/templates/feat_v1.md
       expected_issue_count: 3
       expected_score: 0.25
+  - vars:
+      name: MEET-183-multi-issues
+      ticket: file://../_shared_vars/tickets/bug_v1_MEET-183.md
+      output: file://vars/outputs/bug_v1_MEET-183-multi-issue.md
+      template: file://../_shared_vars/templates/bug_v1.md
+      expected_issue_count: 2
+      expected_score: 0.33333333333333333
+  - vars:
+      name: code-change
+      ticket: file://../_shared_vars/tickets/feat_v1_OP-19488.md
+      output: file://vars/outputs/feat_v1_OP-19488-code-change.md
+      template: file://../_shared_vars/templates/feat_v1.md
+      expected_issue_count: 1
+      expected_score: 0.50
