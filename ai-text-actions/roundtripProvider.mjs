@@ -112,7 +112,8 @@ export default class RoundTripProvider {
       tokenUsage: addUsage(forwardResponse.tokenUsage, inverse.tokenUsage),
       metadata: { originalTicket: context?.vars?.ticket,
                   transformedTicket: forwardResponse.output,
-                  reconstructedTicket: inverse.output},
+                  transformedTicketHash: createHash('sha256').update(forwardResponse.output).digest('hex'),
+                  reconstructedTicket: inverse.output },
     };
 
     // Only successful round trips are cached; errors return early above and are retried next run
