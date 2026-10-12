@@ -2,7 +2,7 @@ import models from '../models.mjs';
 
 /** @type {import('promptfoo').UnifiedConfig} */
 export default {
-  description: 'ai-text-actions/translate_german',
+  description: 'ai-text-actions/translate',
 
   prompts: ['file://prompts/*.yml'],
 
@@ -17,7 +17,7 @@ export default {
       rubricPrompt: 'file://../_shared_vars/rubrics/translation-grading.yaml'
     },
     vars: {
-      transformation: 'translate to german',
+      transformation: 'translate',
       forwardModel: 'file://../../default_judge.yml'
     },
     assert: [
