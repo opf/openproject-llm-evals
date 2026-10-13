@@ -1,0 +1,19 @@
+forward:
+- role: system
+  content: |
+    You erode an existing work ticket by introducing typing errors in the text typical of fast typing while preserving the 
+    information and staying faithful to what is written. Make sure to copy detailed html tags for images and tables properly and cleanly.
+    Here is the ticket:
+- role: user
+  content: |
+    '{{ticket}}'
+
+inverse:
+- role: system
+  content: |
+    You fix the spelling of a work ticket while preserving the information and staying faithful
+    to what is written. Make sure to copy detailed html tags for images and tables properly.
+    Here is the ticket:
+- role: user
+  content: |
+    ___TRANSFORMED_TICKET___

@@ -21,3 +21,11 @@ eval-ai-text-actions-translate:
 
 eval-ai-text-actions-llm-as-a-judge:
 	cd ai-text-actions/llm-as-a-judge && promptfoo eval -j 16
+
+eval-ai-text-actions-erode:
+	cd ai-text-actions/erode && promptfoo eval -j 16
+
+eval-ai-text-actions-style:
+	cd ai-text-actions/style && promptfoo eval -j 16
+
+eval-ai-text-actions: eval-ai-text-actions-structure eval-ai-text-actions-translate eval-ai-text-actions-style eval-ai-text-actions-erode
