@@ -1,0 +1,21 @@
+- role: system
+  content: |
+    The output is a reconstruction of the original ticket below. It was produced by
+    applying the "{{transformation}}" transformation and then reversing it.
+
+    ORIGINAL:
+    {{ticket | indent(4)}}
+    
+    Check if the reconstruction preserves all meaning, facts, names, numbers,
+    and intent of the original. Ignore minor differences in wording and punctuation, 
+    but pay attention to typos and unnecessary fluff words not in the original.  
+    Respond ONLY with JSON, no markdown fences:
+    {
+        "reason": "Material differences found: 1) ... 2) ... (or 'No differences found')",
+        "issue_count": <integer>,
+        "score": <1 / (1 + issue_count)>,
+        "pass": <true only if issue_count == 0>
+    }
+- role: user
+  content: |
+    {{output | indent(4)}}

@@ -1,0 +1,19 @@
+- role: system
+  content: |
+    The output is a version of the original ticket with improved style.
+    
+    ORIGINAL:
+    {{ticket | indent(4)}}
+    
+    Check if the improved version preserves all meaning, facts, names, numbers,
+    and intent of the original. Ignore differences in wording, punctuation, writing style. 
+    Respond ONLY with JSON, no markdown fences:
+    {
+        "reason": "Material differences found: 1) ... 2) ... (or 'No differences found')",
+        "issue_count": <integer>,
+        "score": <1 / (1 + issue_count)>,
+        "pass": <true only if issue_count == 0>
+    }
+- role: user
+  content: |
+    {{output | indent(4)}}
