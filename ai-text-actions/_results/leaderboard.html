@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Promptfoo leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#18202B; --muted:#5B6675; --line:#D5DBE3;
+  --pass:#14806F; --pass-soft:#D6ECE8; --metric:#5B3FB8; --metric-soft:#E5DEF7;
+  --warn:#B4432F; --focus:#2F6FDF; --hover:#F5F7FA;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161C; --surface:#1A2029; --ink:#E6EAF0; --muted:#9AA5B4; --line:#2C3542;
+    --pass:#45C2AB; --pass-soft:#183B36; --metric:#A993F2; --metric-soft:#2B2450;
+    --warn:#E8826B; --focus:#7AA7FF; --hover:#202733;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12161C; --surface:#1A2029; --ink:#E6EAF0; --muted:#9AA5B4; --line:#2C3542;
+  --pass:#45C2AB; --pass-soft:#183B36; --metric:#A993F2; --metric-soft:#2B2450;
+  --warn:#E8826B; --focus:#7AA7FF; --hover:#202733;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.5 "Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+main{max-width:1040px;margin:0 auto;padding:40px 20px 72px}
+h1{font-size:2.25rem;line-height:1.1;letter-spacing:-0.02em;margin:0 0 8px;font-weight:700}
+.lede{color:var(--muted);margin:0 0 28px;max-width:62ch}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* Drop zone */
+.drop{border:2px dashed var(--line);border-radius:14px;background:var(--surface);
+  padding:44px 24px;text-align:center;transition:border-color .15s,background .15s}
+.drop.over{border-color:var(--pass);background:var(--pass-soft)}
+.drop strong{display:block;font-size:1.25rem;margin-bottom:6px}
+.drop p{margin:0 0 18px;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{opacity:.9}
+.linkbtn{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;cursor:pointer;margin-left:14px}
+.privacy{font-size:.85rem;color:var(--muted);margin-top:14px}
+.error{margin-top:16px;color:var(--warn);font-weight:500}
+
+/* Loaded bar */
+.filebar{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .15s,background .15s}
+.filebar.over{border-color:var(--pass);background:var(--pass-soft)}
+.files{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.files li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:4px 4px 4px 10px;background:var(--bg);max-width:100%;min-width:0}
+.files .fn{font-weight:600;overflow-wrap:anywhere}
+.files .fs{color:var(--muted);font-size:.85rem;white-space:nowrap}
+.x{border:0;background:none;cursor:pointer;width:28px;height:28px;border-radius:6px;font-size:1.15rem;line-height:1;color:var(--muted);flex:none}
+.x:hover{background:var(--hover);color:var(--ink)}
+.filebar-foot{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.filebar-foot .stats{color:var(--muted);font-size:.92rem}
+.filebar-foot .actions{margin-left:auto;display:flex;gap:8px}
+.notice{margin:12px 0 0;color:var(--warn);font-weight:500}
+.notice ul{margin:4px 0 0;padding-left:20px;font-weight:400}
+
+/* Controls */
+.controls{display:flex;flex-wrap:wrap;gap:16px 28px;margin:24px 0 18px;align-items:flex-end}
+.ctl label,.ctl .lab{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding:3px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px;max-width:280px}
+
+/* Token table */
+.tokwrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.tok{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:640px}
+.tok th,.tok td{padding:12px 14px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}
+.tok thead th{border-top:0;background:var(--bg);font-size:.8rem;font-weight:500;color:var(--muted);padding:0}
+.tok thead th button{all:unset;box-sizing:border-box;display:block;width:100%;padding:10px 14px;cursor:pointer;text-align:inherit}
+.tok thead th button:hover{color:var(--ink)}
+.tok thead th button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.tok thead th[aria-sort] button{color:var(--ink);font-weight:600}
+.tok th:first-child,.tok td:first-child{text-align:left;white-space:normal}
+.tok td:first-child{font-weight:600;overflow-wrap:anywhere;min-width:160px}
+.tok td:first-child .s{display:block;font-weight:400;font-size:.85rem;color:var(--muted)}
+.tok .totcell{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.tok .totbar{width:72px;height:8px;border-radius:4px;background:var(--metric-soft);overflow:hidden;flex:none}
+.tok .totbar span{display:block;height:100%;background:var(--metric)}
+.tok .dash{color:var(--muted)}
+.tok tfoot td{font-weight:600;background:var(--bg)}
+.tok td:first-child .warnline{color:var(--warn)}
+.hint.warn{color:var(--warn)}
+.hint.warn ul{margin:6px 0 0;padding-left:20px}
+.hint.warn li{color:var(--ink);margin:2px 0}
+
+/* Boards */
+.section{margin-top:28px}
+.section h2{font-size:1.05rem;margin:0 0 4px;font-weight:600}
+.section .ptext{color:var(--muted);font-size:.9rem;margin:0 0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.board{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.row{display:grid;grid-template-columns:44px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) 92px;gap:16px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row.head{font-size:.8rem;color:var(--muted);padding-top:10px;padding-bottom:10px;background:var(--bg)}
+.row.head .sorted{color:var(--ink);font-weight:600}
+.rank{font-variant-numeric:tabular-nums;font-weight:700;font-size:1.15rem;color:var(--muted)}
+.row:not(.head):nth-child(2) .rank{color:var(--ink)}
+.who .n{font-weight:600;overflow-wrap:anywhere}
+.who .s{font-size:.85rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meter{display:flex;align-items:center;gap:10px}
+.bar{flex:1;height:10px;border-radius:5px;overflow:hidden}
+.bar span{display:block;height:100%;border-radius:5px;transition:width .35s ease}
+.meter.pass .bar{background:var(--pass-soft)} .meter.pass .bar span{background:var(--pass)}
+.meter.metric .bar{background:var(--metric-soft)} .meter.metric .bar span{background:var(--metric)}
+.val{font-variant-numeric:tabular-nums;font-weight:600;min-width:3.4em;text-align:right}
+.meter.dim{opacity:.55}
+.na{color:var(--muted);font-size:.9rem}
+.tests{font-size:.85rem;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.tests .err{color:var(--warn)}
+.hint{color:var(--muted);font-size:.9rem;margin-top:12px}
+code{font-size:.9em;background:var(--hover);padding:1px 5px;border-radius:4px}
+[hidden]{display:none!important}
+
+@media (max-width:720px){
+  h1{font-size:1.8rem}
+  .row{grid-template-columns:32px minmax(0,1fr);gap:8px 12px}
+  .row.head{display:none}
+  .row > .meter,.row > .tests{grid-column:2}
+  .tests{text-align:left}
+  .meter::before{content:attr(data-label);font-size:.8rem;color:var(--muted);min-width:6.5em}
+}
+@media (prefers-reduced-motion:reduce){.bar span,.drop{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Model leaderboard</h1>
+  <p class="lede">Drop one or more promptfoo results files to rank models by pass rate and by a named metric such as faithfulness, overall or per prompt.</p>
+
+  <section id="dropzone" class="drop" aria-label="Load results file">
+    <strong>Drop results files here</strong>
+    <p>Use the download from <code>promptfoo view</code>, or create one with <code>promptfoo eval -o results.json</code>.</p>
+    <button class="btn primary" id="pick">Choose files</button>
+    <button class="linkbtn" id="sample">Try sample data</button>
+    <div class="privacy">Files are read in your browser and never uploaded. Select several at once to combine them.</div>
+  </section>
+  <input type="file" id="file" accept=".json,application/json" multiple hidden>
+  <div class="notice" id="notice" role="alert" hidden></div>
+
+  <div id="app" hidden>
+    <div class="filebar" id="filebar">
+      <ul class="files" id="files" aria-label="Loaded files"></ul>
+      <div class="filebar-foot">
+        <span class="stats" id="fstats"></span>
+        <span class="actions"><button class="btn" id="add">Add files</button><button class="btn" id="clear">Clear all</button></span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="ctl">
+        <span class="lab" id="viewLab">Rank</span>
+        <div class="seg" role="group" aria-labelledby="viewLab" id="viewSeg">
+          <button data-v="models" aria-pressed="true">Models</button>
+          <button data-v="perPrompt" aria-pressed="false">Models per prompt</button>
+          <button data-v="prompts" aria-pressed="false">Prompts</button>
+          <button data-v="tests" aria-pressed="false" id="testsBtn">Test cases</button>
+          <button data-v="cells" aria-pressed="false">Every model × prompt</button>
+          <button data-v="files" aria-pressed="false" id="filesBtn">Files</button>
+          <button data-v="tokens" aria-pressed="false">Tokens</button>
+        </div>
+      </div>
+      <div class="ctl" id="sortCtl">
+        <span class="lab" id="sortLab">Sort by</span>
+        <div class="seg" role="group" aria-labelledby="sortLab" id="sortSeg">
+          <button data-s="pass" aria-pressed="true">Pass rate</button>
+          <button data-s="metric" aria-pressed="false" id="metricBtn">Faithfulness</button>
+        </div>
+      </div>
+      <div class="ctl" id="metricCtl">
+        <label for="metricSel">Metric</label>
+        <select id="metricSel"></select>
+      </div>
+      <div class="ctl" id="testVarCtl">
+        <label for="testVarSel">Test case by</label>
+        <select id="testVarSel"></select>
+      </div>
+      <div class="ctl" id="fileCtl">
+        <label for="fileSel">File</label>
+        <select id="fileSel"></select>
+      </div>
+      <div class="ctl" id="promptCtl">
+        <label for="promptSel">Prompt</label>
+        <select id="promptSel"></select>
+      </div>
+    </div>
+
+    <div id="out"></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const state = { files: [], recs: [], metrics: [], metric: null, view: 'models', sort: 'pass',
+    prompt: '__all', file: '__all', testLabels: new Map(), nextId: 1,
+    testVarChoice: null, testVar: '__all', testVarNames: [],
+    tokSort: { k:'total', dir:-1 } };
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const provName = p => typeof p === 'string' ? p : (p && (p.label || p.id)) || 'Unknown provider';
+  const firstLine = s => String(s ?? '').trim().split('\n')[0];
+  const clip = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+  const promptName = s => {
+    const m = String(s ?? '').match(/^([^\s:{]+\.(?:ya?ml|json|txt|md|j2|njk|jinja2?|py|js|ts|mjs|cjs)):/i);
+    return m ? m[1] : (clip(firstLine(s), 90) || '(empty prompt)');
+  };
+  const shortVal = v => {
+    let s = typeof v === 'string' ? v : JSON.stringify(v);
+    s = String(s ?? '');
+    if (/^file:\/\//.test(s) || (/^[^\s]*\/[^\s]+$/.test(s) && !s.includes('\n'))) s = s.split('/').pop();
+    return clip(firstLine(s), 40);
+  };
+  const stableVars = v => JSON.stringify(Object.keys(v || {}).sort().map(k => [k, v[k]]));
+
+  /* ---------- Tokens ---------- */
+  const num = v => { const n = Number(v); return isFinite(n) ? n : 0; };
+  // Token counts come only from the provider's metadata on each result:
+  // inputTokens, outputTokens, reasoningTokens, nonReasoningOutputTokens. promptfoo's tokenUsage is ignored.
+  function rowTokens(row){
+    const resp = row.response || {};
+    const metas = [resp.metadata, row.metadata].filter(m => m && typeof m === 'object');
+    const get = k => { for (const m of metas) if (m[k] != null && m[k] !== '' && isFinite(Number(m[k]))) return Number(m[k]); return null; };
+    const mi = get('inputTokens'), mo = get('outputTokens'), mr = get('reasoningTokens'), mn = get('nonReasoningOutputTokens');
+    const t = emptyTok();
+    t.raw = { output: mo, reasoning: mr, nonReasoning: mn };
+    if (mi === null && mo === null && mr === null && mn === null) return t;
+    t.input = mi ?? 0; t.output = mo ?? 0;
+    t.reasoning = mr ?? 0; t.rn = mr !== null ? 1 : 0;
+    t.nonReasoning = mn ?? 0; t.nrn = mn !== null ? 1 : 0;
+    t.total = t.input + t.output; t.n = 1;
+    // Per-result check: outputTokens = reasoningTokens + nonReasoningOutputTokens
+    if (mo !== null){
+      if (mr !== null && mn !== null){ t.chk = 1; if (Math.abs(mo - (mr + mn)) > 0.5) t.bad = 1; }
+      else t.part = 1;
+    }
+    return t;
+  }
+  const emptyTok = () => ({ total:0, input:0, output:0, cached:0, reasoning:0, rn:0, nonReasoning:0, nrn:0, n:0, chk:0, bad:0, part:0 });
+
+  /* ---------- Parsing one file ---------- */
+  function rowsFromTable(t){
+    const names = (t.head && t.head.vars) || [];
+    const rows = [];
+    t.body.forEach((b, bi) => (b.outputs || []).forEach((o, oi) => {
+      if (!o) return;
+      const vars = (b.test && b.test.vars) || o.vars || Object.fromEntries(names.map((n, i) => [n, (b.vars || [])[i]]));
+      rows.push({ ...o, promptIdx: Number.isInteger(o.promptIdx) ? o.promptIdx : oi, testIdx: b.testIdx ?? bi, vars,
+        _desc: (b.test && b.test.description) || (o.testCase && o.testCase.description) });
+    }));
+    return rows;
+  }
+
+  function extract(json){
+    let prompts = null, rows = null, evalId = json && (json.evalId || json.id) || null;
+    if (json && json.head && Array.isArray(json.body)){
+      prompts = json.head.prompts; rows = rowsFromTable(json);
+    } else {
+      let r = json;
+      if (r && r.results && !Array.isArray(r.results) && typeof r.results === 'object') r = r.results;
+      prompts = (r && (r.prompts || (r.table && r.table.head && r.table.head.prompts))) || null;
+      rows = r && Array.isArray(r.results) ? r.results : null;
+      if ((!rows || !rows.length) && r && r.table && Array.isArray(r.table.body)) rows = rowsFromTable(r.table);
+    }
+    if (!prompts && !rows) throw new Error("no prompt columns or result rows found. Use a promptfoo results export.");
+    if (!evalId && rows) evalId = (rows.find(r => r && r.evalId) || {}).evalId || null;
+
+    const recs = [];
+    const tests = new Map();   // key -> {vars, desc}
+    if (rows && rows.length){
+      rows.forEach(row => {
+        const col = prompts && Number.isInteger(row.promptIdx) ? prompts[row.promptIdx] : null;
+        const provider = provName(row.provider || (col && col.provider));
+        const prompt = col ? (col.label || col.raw) : ((row.prompt && (row.prompt.label || row.prompt.raw)) || 'Prompt');
+        const vars = row.vars || (row.testCase && row.testCase.vars) || {};
+        const desc = row._desc || (row.testCase && row.testCase.description) || '';
+        // Same variables (and description) = same test case, also across files
+        const tkey = Object.keys(vars).length || desc ? 'v' + stableVars(vars) + '|' + desc : null;
+        const key = tkey || '__t' + row.testIdx;
+        if (!tests.has(key)) tests.set(key, { vars, desc, scoped: !tkey });
+        const rec = { provider, prompt, test: key, pass:0, fail:0, error:0, m:{}, tok: rowTokens(row) };
+        if (row.success === true || row.success === 'true') rec.pass = 1;
+        else if (Number(row.failureReason) === 2 || (row.error && !row.gradingResult)) rec.error = 1;
+        else rec.fail = 1;
+        const ns = row.namedScores || (row.gradingResult && row.gradingResult.namedScores) || {};
+        for (const [k, v] of Object.entries(ns)){
+          const n = Number(v);
+          if (isFinite(n)) rec.m[k] = { sum:n, count:1 };
+        }
+        recs.push(rec);
+      });
+    } else {
+      prompts.forEach((p, i) => {
+        const m = p.metrics || {};
+        const rec = { provider: provName(p.provider), prompt: p.label || p.raw || `Prompt ${i+1}`, test: null,
+          pass: m.testPassCount || 0, fail: m.testFailCount || 0, error: m.testErrorCount || 0, m:{} };
+        const total = rec.pass + rec.fail + rec.error;
+        rec.tok = emptyTok();   // summary-only files carry no per-result metadata
+        for (const [k, v] of Object.entries(m.namedScores || {})){
+          const n = (m.namedScoresCount && m.namedScoresCount[k]) || total;
+          if (n) rec.m[k] = { sum:v, count:n };
+        }
+        recs.push(rec);
+      });
+    }
+    return { recs, tests, evalId };
+  }
+
+  /* ---------- Combining files ---------- */
+  function rebuild(){
+    if (!state.files.length){ showDrop(); return; }
+    state.recs = [];
+    const tests = new Map();
+    // Which variable identifies a test case: the user's choice, else "ticket" when present, else all variables
+    const varNames = [...new Set(state.files.flatMap(f => [...f.tests.values()].flatMap(t => Object.keys(t.vars || {}))))].sort();
+    state.testVarNames = varNames;
+    const tv = state.testVarChoice && (state.testVarChoice === '__all' || varNames.includes(state.testVarChoice))
+      ? state.testVarChoice : (varNames.includes('ticket') ? 'ticket' : '__all');
+    state.testVar = tv;
+    state.files.forEach(f => {
+      f.recs.forEach(r => {
+        // Tests without variables can't be matched across files, so keep them per file
+        const t = f.tests.get(r.test);
+        let key = null, byVar = null;
+        if (r.test !== null){
+          if (t && t.scoped) key = f.id + r.test;
+          else if (tv !== '__all' && t && t.vars && tv in t.vars){ key = 'k' + JSON.stringify(t.vars[tv]); byVar = tv; }
+          else key = r.test;
+        }
+        if (key !== null && !tests.has(key)) tests.set(key, { ...t, byVar, file: f.name });
+        state.recs.push({ ...r, test: key, file: f.id });
+      });
+    });
+
+    // Name test cases by description, or by the variables that differ between them
+    state.testLabels = new Map();
+    const list = [...tests.entries()];
+    const allNames = [...new Set(list.flatMap(([, t]) => Object.keys(t.vars || {})))];
+    const differing = allNames.filter(n => new Set(list.map(([, t]) => JSON.stringify((t.vars || {})[n]))).size > 1);
+    list.forEach(([k, t], i) => {
+      if (t.byVar){
+        const v = t.vars[t.byVar];
+        state.testLabels.set(k, { name: shortVal(v), full: `${t.byVar}: ${clip(String(typeof v === 'string' ? v : JSON.stringify(v)), 600)}` });
+        return;
+      }
+      const full = Object.entries(t.vars || {}).map(([n, v]) => `${n}: ${clip(String(typeof v === 'string' ? v : JSON.stringify(v)), 200)}`).join('\n');
+      const name = t.desc || (differing.length ? differing.map(n => `${n}: ${shortVal((t.vars || {})[n])}`).join(', ') : `Test ${i + 1}`);
+      state.testLabels.set(k, { name, full });
+    });
+
+    const metrics = [...new Set(state.recs.flatMap(c => Object.keys(c.m)))].sort();
+    state.metrics = metrics;
+    if (!metrics.includes(state.metric)) state.metric = metrics.find(m => /faithful/i.test(m)) || metrics[0] || null;
+    if (!state.metric && state.sort === 'metric') setSort('pass');
+    if (state.view === 'tests' && !state.recs.some(r => r.test)) setView('models');
+    if (state.view === 'files' && state.files.length < 2) setView('models');
+
+    const prompts = [...new Set(state.recs.map(c => c.prompt))];
+    if (!prompts.includes(state.prompt)) state.prompt = '__all';
+    if (!state.files.some(f => f.id === state.file)) state.file = '__all';
+
+    $('metricSel').innerHTML = metrics.map(m => `<option ${m===state.metric?'selected':''}>${esc(m)}</option>`).join('');
+    $('promptSel').innerHTML = '<option value="__all">All prompts</option>' +
+      prompts.map(p => `<option value="${esc(p)}" ${p===state.prompt?'selected':''}>${esc(clip(promptName(p), 60))}</option>`).join('');
+    $('testVarSel').innerHTML = varNames.map(n => `<option value="${esc(n)}" ${n===tv?'selected':''}>${esc(n)}</option>`).join('') +
+      `<option value="__all" ${tv==='__all'?'selected':''}>All variables</option>`;
+    $('fileSel').innerHTML = '<option value="__all">All files</option>' +
+      state.files.map(f => `<option value="${esc(f.id)}" ${f.id===state.file?'selected':''}>${esc(clip(f.name, 50))}</option>`).join('');
+
+    $('files').innerHTML = state.files.map(f => {
+      const n = f.recs.reduce((s, c) => s + total(c), 0);
+      return `<li><span class="fn">${esc(f.name)}</span><span class="fs">${plural(uniq(f.recs, c => c.provider), 'model')}, ${n} results</span>
+        <button class="x" data-remove="${esc(f.id)}" aria-label="Remove ${esc(f.name)}" title="Remove">×</button></li>`;
+    }).join('');
+
+    const n = state.recs.reduce((s, c) => s + total(c), 0);
+    $('fstats').textContent = (state.files.length > 1 ? `Combined: ` : '') +
+      `${plural(uniq(state.recs, c => c.provider), 'model')}, ${plural(prompts.length, 'prompt')}, ` +
+      (state.testLabels.size ? `${plural(state.testLabels.size, 'test case')}, ` : '') + `${n} results`;
+
+    $('dropzone').hidden = true; $('app').hidden = false;
+    render();
+  }
+
+  /* ---------- Aggregation ---------- */
+  function aggregate(recs, keyFn){
+    const map = new Map();
+    recs.forEach(c => {
+      const k = keyFn(c);
+      let g = map.get(k);
+      if (!g){ g = { key:k, pass:0, fail:0, error:0, m:{}, tok: emptyTok(), members:[] }; map.set(k, g); }
+      g.pass += c.pass; g.fail += c.fail; g.error += c.error; g.members.push(c);
+      if (c.tok) for (const tk in g.tok) g.tok[tk] += Number(c.tok[tk]) || 0;
+      for (const [mk, v] of Object.entries(c.m)){ (g.m[mk] ||= {sum:0,count:0}); g.m[mk].sum += v.sum; g.m[mk].count += v.count; }
+    });
+    return [...map.values()];
+  }
+  const uniq = (arr, f) => new Set(arr.map(f)).size;
+  const total = e => e.pass + e.fail + e.error;
+  const passRate = e => total(e) ? e.pass / total(e) : null;
+  const metricAvg = e => state.metric && e.m[state.metric] && e.m[state.metric].count ? e.m[state.metric].sum / e.m[state.metric].count : null;
+  const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const fileName = id => (state.files.find(f => f.id === id) || {}).name || 'File';
+
+  function sortEntries(list){
+    const primary = state.sort === 'pass' ? passRate : metricAvg;
+    const secondary = state.sort === 'pass' ? metricAvg : passRate;
+    const cmp = (a, b) => (a === null) - (b === null) || (b ?? 0) - (a ?? 0);
+    return list.sort((a, b) => cmp(primary(a), primary(b)) || cmp(secondary(a), secondary(b)) || String(a.name).localeCompare(String(b.name)));
+  }
+
+  /* ---------- Rendering ---------- */
+  const firstCol = { models:'Model', perPrompt:'Model', prompts:'Prompt', tests:'Test case', cells:'Model', files:'File' };
+  function board(entries){
+    const sorted = sortEntries(entries);
+    const metricMax = Math.max(1, ...sorted.map(metricAvg).filter(v => v !== null));
+    const mName = state.metric || 'Metric';
+    let h = '<ol class="board">';
+    h += `<li class="row head" aria-hidden="true"><span>#</span><span>${firstCol[state.view]}</span>
+      <span class="${state.sort==='pass'?'sorted':''}">Pass rate</span>
+      <span class="${state.sort==='metric'?'sorted':''}">${esc(mName)} (avg)</span><span style="text-align:right">Tests</span></li>`;
+    sorted.forEach((e, i) => {
+      const pr = passRate(e), mv = metricAvg(e);
+      const pw = pr === null ? 0 : pr * 100;
+      const mw = mv === null ? 0 : Math.max(0, mv / metricMax * 100);
+      h += `<li class="row">
+        <span class="rank">${i+1}</span>
+        <div class="who"><div class="n" ${e.title ? `title="${esc(e.title)}"` : ''}>${esc(e.name)}</div>${e.sub ? `<div class="s" title="${esc(e.subTitle || e.sub)}">${esc(e.sub)}</div>` : ''}</div>
+        <div class="meter pass ${state.sort==='pass'?'':'dim'}" data-label="Pass rate">
+          ${pr === null ? '<span class="na">No tests</span>' : `<div class="bar"><span style="width:${pw}%"></span></div><span class="val">${(pr*100).toFixed(1)}%</span>`}
+        </div>
+        <div class="meter metric ${state.sort==='metric'?'':'dim'}" data-label="${esc(mName)}">
+          ${mv === null ? `<span class="na">${state.metric ? 'Not scored' : 'No metric'}</span>` : `<div class="bar"><span style="width:${mw}%"></span></div><span class="val">${mv.toFixed(3)}</span>`}
+        </div>
+        <div class="tests">${e.pass}/${total(e)} passed${e.error ? `<br><span class="err">${e.error} error${e.error>1?'s':''}</span>` : ''}</div>
+      </li>`;
+    });
+    return h + '</ol>';
+  }
+
+  const fmt = n => Math.round(n).toLocaleString();
+  function tokenTable(entries){
+    const any = entries.some(e => e.tok.n);
+    if (!any) return '<p class="hint">No token counts found in the result metadata (<code>inputTokens</code>, <code>outputTokens</code>, <code>reasoningTokens</code>, <code>nonReasoningOutputTokens</code>).</p>';
+    const showCached = entries.some(e => e.tok.cached > 0);
+    const showNR = entries.some(e => e.tok.nrn);
+    const cols = [
+      { k:'total', label:'Total' }, { k:'input', label:'Input' }, { k:'output', label:'Output' },
+      { k:'reasoning', label:'Reasoning' }, ...(showNR ? [{ k:'nonReasoning', label:'Non-reasoning output' }] : []), ...(showCached ? [{ k:'cached', label:'Cached' }] : []),
+      { k:'avg', label:'Avg per result' }
+    ];
+    const val = (e, k) => k === 'avg' ? (e.tok.n ? e.tok.total / e.tok.n : null) : k === 'reasoning' && !e.tok.rn ? null : k === 'nonReasoning' && !e.tok.nrn ? null : e.tok[k];
+    const s = state.tokSort;
+    const sorted = entries.slice().sort((a, b) => {
+      if (s.k === 'name') return s.dir * String(a.name).localeCompare(String(b.name));
+      const va = val(a, s.k), vb = val(b, s.k);
+      return (va === null) - (vb === null) || s.dir * ((va ?? 0) - (vb ?? 0)) || String(a.name).localeCompare(String(b.name));
+    });
+    const max = Math.max(1, ...entries.map(e => e.tok.total));
+    const th = (k, label) => `<th scope="col" ${s.k === k ? `aria-sort="${s.dir < 0 ? 'descending' : 'ascending'}"` : ''}><button data-tsort="${k}">${label}${s.k === k ? (s.dir < 0 ? ' ↓' : ' ↑') : ''}</button></th>`;
+    let h = `<div class="tokwrap"><table class="tok"><thead><tr>${th('name', 'Model')}${cols.map(c => th(c.k, c.label)).join('')}</tr></thead><tbody>`;
+    sorted.forEach(e => {
+      const issues = e.tok.bad + e.tok.part;
+      h += `<tr><td>${esc(e.name)}${e.sub ? `<span class="s">${esc(e.sub)}</span>` : ''}${issues ? `<span class="s warnline">${plural(issues, 'result')} with outputs that don\'t add up</span>` : ''}</td>` + cols.map(c => {
+        const v = val(e, c.k);
+        if (v === null) return '<td><span class="dash" title="Not reported">—</span></td>';
+        if (c.k === 'total') return `<td><div class="totcell"><span class="totbar" aria-hidden="true"><span style="width:${v / max * 100}%"></span></span>${fmt(v)}</div></td>`;
+        return `<td>${fmt(v)}</td>`;
+      }).join('') + '</tr>';
+    });
+    if (sorted.length > 1){
+      const sum = emptyTok(); entries.forEach(e => { for (const k in sum) sum[k] += e.tok[k]; });
+      const all = { tok: sum };
+      h += `</tbody><tfoot><tr><td>All models</td>${cols.map(c => { const v = val(all, c.k); return v === null ? '<td><span class="dash">—</span></td>' : `<td>${fmt(v)}</td>`; }).join('')}</tr></tfoot>`;
+    } else h += '</tbody>';
+    h += '</table></div>';
+    const members = entries.flatMap(e => e.members.filter(m => m.tok));
+    const bad = members.filter(m => m.tok.bad), part = members.filter(m => m.tok.part), checked = members.filter(m => m.tok.chk).length;
+    const fmtOrMissing = v => v === null ? '<em>missing</em>' : fmt(v);
+    const example = m => {
+      const r = m.tok.raw, t = state.testLabels.get(m.test);
+      const sum = (r.reasoning ?? 0) + (r.nonReasoning ?? 0);
+      return `<li><strong>${esc(m.provider)}</strong>, ${esc(promptName(m.prompt))}${t ? `, ${esc(t.name)}` : ''}${state.files.length > 1 ? ` (${esc(fileName(m.file))})` : ''}:
+        output ${fmt(r.output)} vs. reasoning ${fmtOrMissing(r.reasoning)} + non-reasoning ${fmtOrMissing(r.nonReasoning)} = ${fmt(sum)}, off by ${fmt(r.output - sum)}</li>`;
+    };
+    const issueBlock = (list, title) => `<div class="hint warn"><strong>${title}</strong><ul>${list.slice(0, 8).map(example).join('')}</ul>${list.length > 8 ? `<div>…and ${list.length - 8} more.</div>` : ''}</div>`;
+    let issueHtml = '';
+    if (bad.length) issueHtml += issueBlock(bad, `${bad.length} of ${checked} results ${bad.length === 1 ? "doesn't" : "don't"} add up (outputTokens ≠ reasoningTokens + nonReasoningOutputTokens):`);
+    if (part.length) issueHtml += issueBlock(part, `${plural(part.length, 'result')} report${part.length === 1 ? 's' : ''} outputTokens but ${part.length === 1 ? 'is' : 'are'} missing reasoningTokens or nonReasoningOutputTokens, which then count${part.length === 1 ? 's' : ''} as 0:`);
+    return h + issueHtml;
+  }
+
+  function render(){
+    const multi = state.files.length > 1;
+    const byFile = state.file === '__all' ? state.recs : state.recs.filter(c => c.file === state.file);
+    const recs = state.prompt === '__all' ? byFile : byFile.filter(c => c.prompt === state.prompt);
+    $('promptCtl').hidden = state.view === 'prompts' || uniq(byFile, c => c.prompt) < 2;
+    $('fileCtl').hidden = !multi || state.view === 'files';
+    $('testVarCtl').hidden = state.view !== 'tests' || !state.testVarNames.length;
+    $('metricCtl').hidden = state.metrics.length < 2 || state.view === 'tokens';
+    $('sortCtl').hidden = state.view === 'tokens';
+    $('testsBtn').hidden = !state.recs.some(r => r.test);
+    $('filesBtn').hidden = !multi;
+    $('metricBtn').textContent = state.metric ? cap(state.metric) : 'Faithfulness';
+    $('metricBtn').disabled = !state.metric;
+    const fileNote = e => { const nf = uniq(e.members, m => m.file); return multi && nf > 1 ? `, ${plural(nf, 'file')}` : ''; };
+
+    let html = '';
+    if (state.view === 'models'){
+      html = board(aggregate(recs, c => c.provider).map(e => {
+        const np = uniq(e.members, m => m.prompt), nt = uniq(e.members.filter(m => m.test), m => m.test);
+        return { ...e, name:e.key, sub: (np > 1 ? `Across ${plural(np,'prompt')}` : promptName(e.members[0].prompt)) + (nt > 1 ? `, ${plural(nt,'test case')}` : '') + fileNote(e) };
+      }));
+    } else if (state.view === 'prompts'){
+      html = board(aggregate(byFile, c => c.prompt).map(e => ({ ...e, name:promptName(e.key), title:clip(String(e.key), 600), sub:plural(uniq(e.members, m => m.provider), 'model') + fileNote(e) })));
+    } else if (state.view === 'tests'){
+      html = board(aggregate(recs.filter(c => c.test), c => c.test).map(e => {
+        const l = state.testLabels.get(e.key) || { name:'Test', full:'' };
+        return { ...e, name:l.name, title:l.full, sub:`${plural(uniq(e.members, m => m.provider), 'model')}, ${plural(uniq(e.members, m => m.prompt), 'prompt')}` + fileNote(e) };
+      }));
+    } else if (state.view === 'perPrompt'){
+      aggregate(recs, c => c.prompt).forEach(grp => {
+        const entries = aggregate(grp.members, c => c.provider).map(e => ({ ...e, name:e.key, sub: fileNote(e).replace(/^, /, '') }));
+        html += `<div class="section"><h2 title="${esc(clip(String(grp.key), 600))}">${esc(promptName(grp.key))}</h2>${board(entries)}</div>`;
+      });
+    } else if (state.view === 'tokens'){
+      html = tokenTable(aggregate(recs, c => c.provider).map(e => {
+        const np = uniq(e.members, m => m.prompt);
+        return { ...e, name:e.key, sub: (np > 1 ? `Across ${plural(np,'prompt')}, ` : '') + plural(total(e), 'result') + fileNote(e) };
+      }));
+    } else if (state.view === 'files'){
+      html = board(aggregate(state.prompt === '__all' ? state.recs : state.recs.filter(c => c.prompt === state.prompt), c => c.file)
+        .map(e => ({ ...e, name:fileName(e.key), sub:`${plural(uniq(e.members, m => m.provider), 'model')}, ${plural(uniq(e.members, m => m.prompt), 'prompt')}` })));
+    } else {
+      html = board(aggregate(recs, c => c.provider + '\u0000' + c.prompt).map(e => ({ ...e, name:e.members[0].provider,
+        sub:promptName(e.members[0].prompt) + fileNote(e), subTitle:clip(String(e.members[0].prompt), 600) })));
+    }
+
+    if (!state.metrics.length && state.view !== 'tokens'){
+      html += `<p class="hint">No named metrics were found in these files. Give assertions a name with <code>metric: faithfulness</code> in your config to rank by it.</p>`;
+    }
+    $('out').innerHTML = html;
+  }
+
+  /* ---------- Loading ---------- */
+  function addParsed(items){
+    const problems = [];
+    items.forEach(({ name, size, json, error }) => {
+      if (error){ problems.push(`${name}: ${error}`); return; }
+      let parsed;
+      try { parsed = extract(json); } catch(e){ problems.push(`${name}: ${e.message}`); return; }
+      if (!parsed.recs.length){ problems.push(`${name}: no results to rank.`); return; }
+      const dupe = state.files.find(f => (parsed.evalId && f.evalId === parsed.evalId) || (f.name === name && f.size === size));
+      if (dupe){ problems.push(`${name}: already loaded${dupe.name !== name ? ` as ${dupe.name}` : ''}, skipped.`); return; }
+      state.files.push({ id: 'f' + state.nextId++, name, size, evalId: parsed.evalId, ...parsed });
+    });
+    const n = $('notice');
+    if (problems.length){
+      n.innerHTML = `${problems.length === 1 ? 'One file was' : problems.length + ' files were'} not added:<ul>${problems.map(p => `<li>${esc(p)}</li>`).join('')}</ul>`;
+      n.hidden = false;
+    } else n.hidden = true;
+    rebuild();
+  }
+
+  function readText(f){
+    return new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => res(null); r.readAsText(f); });
+  }
+  async function readFiles(list){
+    const files = [...(list || [])];
+    if (!files.length) return;
+    const items = await Promise.all(files.map(async f => {
+      const text = await readText(f);
+      if (text === null) return { name:f.name, error:"couldn't be read." };
+      try { return { name:f.name, size:f.size, json:JSON.parse(text) }; }
+      catch { return { name:f.name, error:"isn't valid JSON." }; }
+    }));
+    addParsed(items);
+  }
+  function showDrop(){ $('dropzone').hidden = false; $('app').hidden = true; }
+
+  /* ---------- Sample data: two runs that share a model ---------- */
+  function sample(seed, providers, quality, evalId){
+    const prompts = [
+      {label:'prompts/strict_context.yml: Answer only using the context below.', raw:'Answer only using the context below. If the answer is not in the context, say so.\n\n{{context}}\n\nQ: {{question}}'},
+      {label:'prompts/concise_cited.yml: Give a short answer and cite the passage you used.', raw:'Give a short answer and cite the passage you used.\n\n{{context}}\n\nQ: {{question}}'}
+    ];
+    const docs = ['file://docs/billing.md','file://docs/onboarding.md','file://docs/security.md'];
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const out = []; const ps = [];
+    providers.forEach((pv, a) => prompts.forEach((pr, b) => {
+      ps.push({provider:pv, label:pr.label, raw:pr.raw});
+      for (let t = 0; t < 9; t++){
+        const f = Math.min(1, Math.max(0, quality[a][b] - (t % 3) * 0.05 + (rnd() - 0.5) * 0.35));
+        const ok = f > 0.7 && rnd() > 0.08;
+        out.push({promptIdx:ps.length-1, testIdx:t, vars:{context:docs[t % 3], question:`Question ${Math.floor(t/3)+1}`}, provider:{id:pv}, success:ok, failureReason: ok?0:1,
+          namedScores:{faithfulness:+f.toFixed(3), relevance:+Math.min(1, f + 0.05 * rnd()).toFixed(3)}, gradingResult:{pass:ok}});
+      }
+    }));
+    return {evalId, results:{version:3, prompts:ps, results:out}};
+  }
+  function loadSample(){
+    addParsed([
+      { name:'sample-run-1.json', size:1, json:sample(7, ['anthropic:messages:claude-sonnet-4-6','openai:gpt-4.1-mini'], [[0.93,0.95],[0.84,0.88]], 'sample-1') },
+      { name:'sample-run-2.json', size:2, json:sample(11, ['openai:gpt-4.1-mini','ollama:chat:llama3.1:8b'], [[0.86,0.85],[0.66,0.61]], 'sample-2') }
+    ]);
+  }
+
+  /* ---------- Wiring ---------- */
+  function setSort(s){ state.sort = s; document.querySelectorAll('#sortSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s)); }
+  function setView(v){ state.view = v; document.querySelectorAll('#viewSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); }
+  const openPicker = () => { $('file').value = ''; $('file').click(); };
+  $('pick').onclick = openPicker;
+  $('add').onclick = openPicker;
+  $('clear').onclick = () => { state.files = []; $('notice').hidden = true; rebuild(); };
+  $('file').onchange = e => readFiles(e.target.files);
+  $('sample').onclick = loadSample;
+  $('files').onclick = e => {
+    const b = e.target.closest('[data-remove]'); if (!b) return;
+    state.files = state.files.filter(f => f.id !== b.dataset.remove);
+    rebuild();
+    if (state.files.length) { const nb = document.querySelector('#files .x') || $('add'); nb.focus(); } else $('pick').focus();
+  };
+  document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => { setView(b.dataset.v); render(); });
+  document.querySelectorAll('#sortSeg button').forEach(b => b.onclick = () => { setSort(b.dataset.s); render(); });
+  $('metricSel').onchange = e => { state.metric = e.target.value; render(); };
+  $('promptSel').onchange = e => { state.prompt = e.target.value; render(); };
+  $('fileSel').onchange = e => { state.file = e.target.value; render(); };
+  $('out').addEventListener('click', e => {
+    const b = e.target.closest('[data-tsort]'); if (!b) return;
+    const k = b.dataset.tsort;
+    state.tokSort = state.tokSort.k === k ? { k, dir: -state.tokSort.dir } : { k, dir: k === 'name' ? 1 : -1 };
+    render();
+    const nb = document.querySelector(`[data-tsort="${k}"]`); if (nb) nb.focus();
+  });
+  $('testVarSel').onchange = e => { state.testVarChoice = e.target.value; rebuild(); };
+
+  const target = () => $('app').hidden ? $('dropzone') : $('filebar');
+  let depth = 0;
+  window.addEventListener('dragenter', e => { e.preventDefault(); depth++; target().classList.add('over'); });
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('dragleave', e => { e.preventDefault(); if (--depth <= 0){ depth = 0; $('dropzone').classList.remove('over'); $('filebar').classList.remove('over'); } });
+  window.addEventListener('drop', e => {
+    e.preventDefault(); depth = 0;
+    $('dropzone').classList.remove('over'); $('filebar').classList.remove('over');
+    readFiles(e.dataTransfer && e.dataTransfer.files);
+  });
+
+})();
+</script>
+</body>
+</html>

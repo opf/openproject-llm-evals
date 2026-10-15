@@ -1,10 +1,6 @@
 import { createHash } from 'node:crypto';
 import { loadApiProvider } from 'promptfoo';
-
-const parseBool = (val, defaultValue = false) => {
-  if (val === undefined) return defaultValue;
-  return /^(true|1)$/i.test(val.trim());
-};
+import {parseBool} from "../util/parse_bool.js";
 
 const cache_enabled = parseBool(process.env.PROMPTFOO_CACHE_ENABLED, true)
 

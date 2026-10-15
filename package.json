@@ -2,11 +2,7 @@
   "name": "openproject-llm-evals",
   "version": "1.0.0",
   "description": "Evals for evaluating LLMs and prompts in OpenProject",
-  "scripts": {
-    "eval-refine-ticket": "make eval-refine-ticket",
-    "eval-refine-ticket-llm-as-a-judge": "make eval-refine-ticket-llm-as-a-judge",
-    "view": "promptfoo view -y"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/opf/openproject-llm-evals.git"

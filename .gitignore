@@ -1,5 +1,6 @@
 .idea/
 *_results.json
+!ai-text-actions/_results/**/*_results.json
 # --- JavaScript / Node ---
 node_modules/
 npm-debug.log*
