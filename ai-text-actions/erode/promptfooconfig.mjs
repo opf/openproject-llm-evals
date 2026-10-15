@@ -17,7 +17,7 @@ export default {
       rubricPrompt: 'file://../_shared_vars/rubrics/erode-grading.yaml'
     },
     vars: {
-      transformation: 'translate',
+      transformation: 'erode',
       forwardModel: 'file://../../default_judge.yml'
     },
     assert: [

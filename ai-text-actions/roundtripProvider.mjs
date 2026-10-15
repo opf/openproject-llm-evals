@@ -111,7 +111,6 @@ export default class RoundTripProvider {
         forwardResponse = await model.callApi(JSON.stringify(spec.forward));
       }
     }
-
     // Step 2: substitute the forward output on the parsed objects, not the JSON text,
     // so quotes and newlines in the model output can't break anything
     const inverseMessages = forwardResponse ? spec.inverse.map((m) => ({
@@ -121,14 +120,21 @@ export default class RoundTripProvider {
     const inverse = await model.callApi(JSON.stringify(inverseMessages));
     if (inverse.error) return { error: `Inverse step failed: ${inverse.error}` };
 
+    const reasoningTokens = inverse.tokenUsage.completionDetails?.reasoning || 0
     const result = {
       output: inverse.output,
       tokenUsage: addUsage(forwardResponse?.tokenUsage, inverse.tokenUsage),
-      metadata: { originalTicket: context?.vars?.ticket,
-                  transformedTicket: forwardResponse?.output,
-                  transformedTicketHash: createHash('sha256').update(forwardResponse?.output || "").digest('hex'),
-                  reconstructedTicket: inverse.output },
-    };
+      metadata: {
+        originalTicket: context?.vars?.ticket,
+        transformedTicket: forwardResponse?.output,
+        transformedTicketHash: createHash('sha256').update(forwardResponse?.output || "").digest('hex'),
+        reconstructedTicket: inverse.output,
+        reasoningTokens: reasoningTokens,
+        inputTokens: inverse.tokenUsage.prompt,
+        outputTokens: inverse.tokenUsage.completion,
+        nonReasoningOutputTokens: inverse.tokenUsage.completion - reasoningTokens
+      }
+    }
 
     // Only successful round trips are cached; errors return early above and are retried next run
     if (cache) await cache.set(cacheKey, result);

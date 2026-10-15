@@ -17,7 +17,7 @@ export default {
       rubricPrompt: 'file://../_shared_vars/rubrics/style-grading.yaml'
     },
     vars: {
-      transformation: 'translate',
+      transformation: 'none',
       forwardModel: 'file://../../default_judge.yml'
     },
     assert: [

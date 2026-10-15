@@ -4,9 +4,10 @@ export default [
     label: 'qwen3.6-35b-a3b',
     model: 'openrouter:qwen/qwen3.6-35b-a3b',
     config: {
+      showThinking: false,
       provider: { order: ['parasail/fp8', 'atlas-cloud/fp8'] },
       passthrough: {
-        reasoning: {enabled: false},
+        reasoning: {enabled: true},
         temperature: 0.0
       },
       max_tokens: 16384,
@@ -16,8 +17,9 @@ export default [
     label: 'qwen3.8-27b',
     model: 'openrouter:qwen/qwen3.8-27b',
     config: {
+      showThinking: false,
       provider: { order: ['deepinfra/fp8', 'venice/fp8'] },
-      passthrough: { reasoning: { enabled: false }, temperature: 0 },
+      passthrough: { reasoning: { enabled: true, effort: "minimal" }, temperature: 0 },
       max_tokens: 16384,
     },
   },
@@ -34,7 +36,8 @@ export default [
     label: 'gemma-4-26b-a4b-it',
     model: 'openrouter:google/gemma-4-26b-a4b-it',
     config: {
-      passthrough: { reasoning: { enabled: false }, temperature: 0 },
+      showThinking: false,
+      passthrough: { reasoning: { enabled: true }, temperature: 0 },
       provider: { order: ['deepinfra/fp8'] },
       max_tokens: 16384,
     },
@@ -43,8 +46,9 @@ export default [
     label: 'gemma4-31b-it',
     model: 'openrouter:google/gemma-4-31b-it',
     config: {
+      showThinking: false,
       provider: { order: ['deepinfra/fp8'] },
-      passthrough: { reasoning: { enabled: false }, temperature: 0 },
+      passthrough: { reasoning: { enabled: true }, temperature: 0 },
       max_tokens: 16384,
     },
   },
@@ -59,11 +63,12 @@ export default [
     },
   },
   {
-    label: 'nemotron-3.5-lightning',
-    model: 'openrouter:nvidia/nemotron-3.5-lightning',
+    label: 'mistral-small-4',
+    model: 'openrouter:mistralai/mistral-small-2603',
     config: {
-      provider: { order: ['deepinfra/bf16'] },
-      passthrough: { reasoning: { enabled: false }, temperature: 0  },
+      showThinking: false,
+      provider: { order: ['mistral/eu'] },
+      passthrough: { reasoning: { enabled: true, strength: "low" }, temperature: 0  },
       max_tokens: 16384,
     },
   },
@@ -71,8 +76,9 @@ export default [
     label: 'glm-4.7-flash',
     model: 'openrouter:z-ai/glm-4.7-flash',
     config: {
+      showThinking: false,
       provider: { order: ['venice/fp8'] },
-      passthrough: { reasoning: { enabled: false }, temperature: 0  },
+      passthrough: { reasoning: { enabled: true }, temperature: 0  },
       max_tokens: 16384,
     },
   },
@@ -85,5 +91,15 @@ export default [
       passthrough: { reasoning: { enabled: true, strength: "low" }, temperature: 0  },
       max_tokens: 16384
     }
-  }
+  },
+  // {
+  //   label: 'muse-drafter',
+  //   model: 'openai:chat:muse-glimmer',
+  //   config: {
+  //     showThinking: false,
+  //     apiBaseUrl: "http://localhost:8000/v1",
+  //     passthrough: { reasoning: { enabled: true, strength: "low" }, temperature: 0  },
+  //     max_tokens: 16384
+  //   }
+  // }
 ];
